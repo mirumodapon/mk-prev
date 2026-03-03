@@ -8,7 +8,12 @@ function App() {
   const markdown = useMemo(() => parser.safeRender(content), [parser, content])
 
   useEffect(() => {
-    window.localStorage.setItem('mk.mirumo.net', content)
+
+    if (content === '') {
+      window.localStorage.removeItem('mk.mirumo.net')
+    } else {
+      window.localStorage.setItem('mk.mirumo.net', content)
+    }
   }, [content])
 
   return (
