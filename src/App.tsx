@@ -1,34 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useMemo } from 'react'
+import { Markdown } from './markdown'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [content, setContent] = useState<string>('')
+
+  const parser = useMemo(() => new Markdown(), [])
+  const markdown = useMemo(() => parser.safeRender(content), [parser, content])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="w-full h-full grid grid-cols-2">
+      <div className="h-full p-5 border-r">
+        <textarea
+          className="w-full h-full resize-none p-2 overflow-y-auto"
+          onChange={(e) => setContent(e.target.value)}
+          value={content}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <div
+        dangerouslySetInnerHTML={{ __html: markdown }}
+        className="h-full prose max-w-none p-5 overflow-y-auto" />
+    </div>
   )
 }
 
